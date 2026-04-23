@@ -33,6 +33,9 @@ function filterListings(state) {
 
   const blockedSet = new Set(state.user?.blockedUsers || []);
 
+  // Pre-build uid→profile map once so each listing lookup is O(1)
+  const userMap = new Map(state.users.map((u) => [u.uid || u.id, u]));
+
   const filtered = state.marketplace.filter((listing) => {
     if (listing.unavailable) return false;
     const ownerId = listing.uid || listing.ownerId;
@@ -48,9 +51,18 @@ function filterListings(state) {
     let matchesLocation = true;
     if (state.ui.marketplaceFilters.locationType && state.ui.marketplaceFilters.locationType !== "all" && state.user?.location) {
       const type = state.ui.marketplaceFilters.locationType;
-      const userLoc = String(state.user.location[type] || "").toLowerCase();
-      const listingLoc = String(listing.location?.[type] || "").toLowerCase();
-      matchesLocation = userLoc && listingLoc && userLoc === listingLoc;
+      const userLoc = String(state.user.location[type] || "").toLowerCase().trim();
+
+      // Primary: use location saved directly on the listing.
+      // Fallback: resolve the listing owner's profile — handles all legacy
+      // listings (skills/books) and listings created before location was stored.
+      let listingLoc = String(listing.location?.[type] || "").toLowerCase().trim();
+      if (!listingLoc && ownerId) {
+        const ownerProfile = userMap.get(ownerId);
+        listingLoc = String(ownerProfile?.location?.[type] || "").toLowerCase().trim();
+      }
+
+      matchesLocation = Boolean(userLoc && listingLoc && userLoc === listingLoc);
     }
 
     const selectedLanguages = Array.isArray(languages) ? languages : [];

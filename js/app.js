@@ -819,7 +819,13 @@ async function handleListingSubmit() {
       title: payload.title,
       description: payload.description,
       listingType: payload.listingType,
-      creditPrice: payload.creditPrice
+      creditPrice: payload.creditPrice,
+      location: {
+        country: String(state.user.location?.country || "").trim(),
+        state: String(state.user.location?.state || "").trim(),
+        city: String(state.user.location?.city || "").trim(),
+        pincode: String(state.user.location?.pincode || "").trim()
+      }
     });
 
     updateState(
