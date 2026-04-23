@@ -394,32 +394,28 @@ function renderMarketplaceCard(listing, isMine) {
         </div>
       </div>
 
-      <div class="flex gap-1.5">
+      <div class="flex flex-wrap gap-1.5">
         ${isMine ? `
           <div class="flex items-center justify-center bg-surface-muted text-on-surface-variant rounded-md flex-1 h-8 text-xs font-semibold border border-outline-variant/30">Your listing</div>
-          <button class="btn-danger h-8 px-2.5 text-xs" data-action="delete-listing" data-id="${listing.rawId || listing.id}" data-source="${listing.sourceCollection || "listings"}" title="Delete listing">
+          <button class="btn-danger h-8 px-2.5 text-xs shrink-0" data-action="delete-listing" data-id="${listing.rawId || listing.id}" data-source="${listing.sourceCollection || "listings"}" title="Delete listing">
             <span class="material-symbols-outlined" style="font-size:15px;">delete</span>
           </button>
         ` : `
-          <button class="btn-primary flex-1 h-8 text-xs" data-action="offer-trade" data-trade-type="credit" data-listing-id="${listing.id}" data-user-id="${listing.uid || listing.ownerId}">Buy (CRD)</button>
-          <button class="btn-secondary flex-1 h-8 text-xs" data-action="offer-trade" data-trade-type="barter" data-listing-id="${listing.id}" data-user-id="${listing.uid || listing.ownerId}">Barter</button>
+          <button class="btn-primary flex-1 min-w-0 h-8 text-xs" data-action="offer-trade" data-trade-type="credit" data-listing-id="${listing.id}" data-user-id="${listing.uid || listing.ownerId}">Buy (CRD)</button>
+          <button class="btn-secondary flex-1 min-w-0 h-8 text-xs" data-action="offer-trade" data-trade-type="barter" data-listing-id="${listing.id}" data-user-id="${listing.uid || listing.ownerId}">Barter</button>
           <button class="icon-btn w-8 h-8 shrink-0 text-on-surface-variant hover:text-danger transition-colors" style="min-height: unset; border-radius: 8px; background: var(--surface-muted);"
             data-action="report-listing" data-id="${listing.rawId || listing.id}" title="Report listing">
             <span class="material-symbols-outlined" style="font-size:15px;">flag</span>
           </button>
+          <button class="icon-btn w-8 h-8 shrink-0 text-on-surface-variant hover:text-amber-400 transition-colors" style="min-height:unset;border-radius:8px;background:var(--surface-muted);"
+            data-action="report-user" data-user-id="${listing.uid || listing.ownerId}" title="Report user">
+            <span class="material-symbols-outlined" style="font-size:14px;">person_alert</span>
+          </button>
+          <button class="icon-btn w-8 h-8 shrink-0 text-on-surface-variant hover:text-red-400 transition-colors" style="min-height:unset;border-radius:8px;background:var(--surface-muted);"
+            data-action="block-user" data-user-id="${listing.uid || listing.ownerId}" title="Block user">
+            <span class="material-symbols-outlined" style="font-size:14px;">block</span>
+          </button>
         `}
-        ${!isMine ? `
-          <div class="flex items-center gap-1">
-            <button class="icon-btn w-8 h-8 shrink-0 text-on-surface-variant hover:text-amber-400 transition-colors" style="min-height:unset;border-radius:8px;background:var(--surface-muted);"
-              data-action="report-user" data-user-id="${listing.uid || listing.ownerId}" title="Report user">
-              <span class="material-symbols-outlined" style="font-size:14px;">person_alert</span>
-            </button>
-            <button class="icon-btn w-8 h-8 shrink-0 text-on-surface-variant hover:text-red-400 transition-colors" style="min-height:unset;border-radius:8px;background:var(--surface-muted);"
-              data-action="block-user" data-user-id="${listing.uid || listing.ownerId}" title="Block user">
-              <span class="material-symbols-outlined" style="font-size:14px;">block</span>
-            </button>
-          </div>
-        ` : ""}
       </div>
     </article>
   `;
